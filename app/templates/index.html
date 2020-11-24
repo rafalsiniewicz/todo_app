@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+{% for todo in todos %}
+  {% now "Y-m-d" as todays_date %}
+  {% if todays_date >= todo.expiration_date|date:"Y-m-d" and todo.status != 'Expired' %}
+    <script>
+      window.location.href = "change-status/{{todo.id}}/Expired";
+    </script>
+  {% endif %}
+{% endfor %}
   <div class="container pt-4">
       <div class="row p-0 mt-4" >
         <div class="col-lg-4 mx-auto shadow p-0">
@@ -32,13 +40,16 @@
 
             {% else %}
             <div>
-              <table class="table">
-                <thead>
+              <table class="table table-bordered">
+                <thead class="thead-light">
                   <tr>
                     <th>#</th>
                     <th>Title</th>
                     <th>Status</th>
                     <th>Priority</th>
+                    <th>User</th>
+                    <th>Creation date</th>
+                    <th>Expiration date</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -50,6 +61,9 @@
                       <td>{{todo.title}}</td>
                       <td>{{todo.status}}</td>
                       <td>{{todo.priority}}</td>
+                      <td>{{todo.user}}</td>
+                      <td>{{todo.creation_date}}</td>
+                      <td>{{todo.expiration_date}}</td>
                       <td>
                         <a href="delete-todo/{{todo.id}}" title="Delete">🗑️</a>
                         {% if todo.status == 'In progress' %}
