@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as loginUser, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from app.forms import TODOForm
-from app.models import TODO
+from app.forms import TODOForm, TeamForm
+from app.models import TODO, Team
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -87,5 +87,25 @@ def change_todo(request, id, status):
 def signout(request):
     logout(request)
     return redirect('login')
+
+def teams(request):
+    if request.user.is_authenticated:
+        user = request.user
+        form = TeamForm()
+        teams = Team.objects.filter(owner=user).order_by('-title')
+        context = {'form': form, 'teams': teams}
+        return render(request, 'teams.html', context=context)
+
+def add_team(request):
+    if request.user.is_authenticated:
+        user = request.user
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.owner = user
+            todo.save()
+            todo.users.add(user)
+            todo.save()
+            return redirect("teams")
 
 

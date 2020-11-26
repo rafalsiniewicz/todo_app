@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class Team(models.Model):
+    title = models.CharField(max_length=50, default=None)
+    users = models.ManyToManyField(User, default=None)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s_requests_created', default=[], blank=True)
+
+
 class TODO(models.Model):
     STATUS = [
         ('To do', 'TO DO'),

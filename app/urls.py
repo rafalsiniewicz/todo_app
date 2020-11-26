@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo
+from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo, teams, add_team
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,7 @@ urlpatterns = [
     path('add-todo/', add_todo),
     path('delete-todo/<int:id>', delete_todo),
     path('change-status/<int:id>/<str:status>', change_todo),
-    path('logout/', signout)
+    path('logout/', signout),
+    path('teams/', teams, name="teams"),
+    path('add-team/', add_team)
 ]
