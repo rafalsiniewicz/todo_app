@@ -15,6 +15,13 @@ def home(request):
         todos = TODO.objects.filter(user=user).order_by('-priority')
         return render(request, 'index.html', context={'form': form, 'todos': todos})
 
+def statistics(request):
+    if request.user.is_authenticated:
+        user = request.user
+        form = TODOForm()
+        todos = TODO.objects.filter(user=user).order_by('-priority')
+        return render(request, 'statistics.html', context={'form': form, 'todos': todos})
+
 def login(request):
     if request.method == 'GET':
         form = AuthenticationForm
