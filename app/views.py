@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as loginUser, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from app.forms import TODOForm, TeamForm
-from app.models import TODO, Team
+from app.models import TODO, Team, User
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -95,6 +95,40 @@ def teams(request):
         teams = Team.objects.filter(owner=user).order_by('-title')
         context = {'form': form, 'teams': teams}
         return render(request, 'teams.html', context=context)
+
+def team_users(request, id):
+    if request.user.is_authenticated:
+        user = request.user
+        team = Team.objects.get(pk=id)
+        users = team.users.all()
+        context = {'team': team, 'users': users}
+        return render(request, 'team_users.html', context=context)
+
+def team_members_add_view(request, id):
+    if request.user.is_authenticated:
+        user = request.user
+        team = Team.objects.get(pk=id)
+        users = User.objects.all()
+        team_users_list = list(team.users.all())
+        users_list = list(filter(lambda x: x not in team_users_list, list(users)))
+        context = {'users': users, 'team': team, 'users_list': users_list}
+        return render(request, 'team_members_add.html', context=context)
+
+def add_member_to_team(request, id, user_id):
+    if request.user.is_authenticated:
+        team = Team.objects.get(pk = id)
+        user = User.objects.get(pk = user_id)
+        team.users.add(user)
+        team.save()
+        return redirect('/teams/team_users/' + str(id))
+
+def remove_member_from_team(request, id, user_id):
+    if request.user.is_authenticated:
+        team = Team.objects.get(pk = id)
+        user = User.objects.get(pk = user_id)
+        team.users.remove(user)
+        team.save()
+        return redirect('/teams/team_users/' + str(id))
 
 def add_team(request):
     if request.user.is_authenticated:
