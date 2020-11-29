@@ -13,7 +13,10 @@ def home(request):
         user = request.user
         form = TODOForm()
         todos = TODO.objects.filter(user=user).order_by('-priority')
-        return render(request, 'index.html', context={'form': form, 'todos': todos})
+        stats = {st: 0 for st in ['Done', 'In_progress', 'To_do', 'Expired']}
+        for status in list(map(lambda t: t.status, todos)):
+            stats[status.replace(' ', '_')] += 1
+        return render(request, 'index.html', context={'form': form, 'todos': todos, 'stats': stats})
 
 def login(request):
     if request.method == 'GET':
