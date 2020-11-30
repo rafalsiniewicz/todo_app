@@ -87,7 +87,7 @@
           <div id="chartContainer" style="height: 200px; width: 100%"></div>
           <script>
             window.onload = function () {
-              CanvasJS.addColorSet("custom", ["#008000", "#FFA500", "#ADD8E6"]);
+              CanvasJS.addColorSet("custom", ["#FF0000", "#008000", "#FFA500", "#ADD8E6"]);
               var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 colorSet: "custom",
@@ -106,6 +106,7 @@
                   type: "bar",
                   name: "tasks",
                   dataPoints: [
+                      {label: "Expired", y: {{stats.Expired}} },
                       {label: "Done", y: {{stats.Done}} },
                       {label: "In progress", y: {{stats.In_progress}} },
                       {label: "To do", y: {{stats.To_do}} },
