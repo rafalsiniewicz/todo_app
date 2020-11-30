@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo, teams, add_team, team_users, team_members_add_view, add_member_to_team, remove_member_from_team
+from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo, teams, add_team, team_users, team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,6 +23,8 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('signup/', signup),
     path('add-todo/', add_todo),
+    path('add-comment/<int:id>', add_comment),
+    path('todo/<int:id>/comments', todo_comments),
     path('delete-todo/<int:id>', delete_todo),
     path('change-status/<int:id>/<str:status>', change_todo),
     path('logout/', signout),

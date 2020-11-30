@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as loginUser, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from app.forms import TODOForm, TeamForm
+from app.forms import TODOForm, TeamForm, CommentForm
 from app.models import TODO, Team, User
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -76,6 +76,19 @@ def add_todo(request):
             }
             return render(request, 'index.html', context=context)
 
+def add_comment(request, id):
+    if request.user.is_authenticated:
+        todo = TODO.objects.get(pk = id)
+        user = request.user
+        form = CommentForm(request.POST)
+        comment = form.save(commit=False)
+        comment.author = user
+        comment.save()
+        todo.comments.add(comment)
+        todo.save()
+        print(comment.content)
+        return redirect('/todo/' + str(id) + '/comments')
+
 def delete_todo(request, id):
     TODO.objects.get(pk = id).delete()
     return redirect('home')
@@ -86,6 +99,13 @@ def change_todo(request, id, status):
     todo.save()
     return redirect('home')
 
+def todo_comments(request, id):
+    if request.user.is_authenticated:
+        todo = TODO.objects.get(pk = id)
+        form = CommentForm()
+        comments = todo.comments.all()
+        context = {'form': form, 'comments': comments, 'todo': todo}
+        return render(request, 'todo_comments.html', context=context)
 
 def signout(request):
     logout(request)

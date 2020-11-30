@@ -1,5 +1,5 @@
-from django.forms import ModelForm, DateInput
-from app.models import TODO, Team
+from django.forms import ModelForm, DateInput, CharField, Textarea
+from app.models import TODO, Team, Comment
 
 class TODOForm(ModelForm):
     class Meta:
@@ -14,3 +14,11 @@ class TeamForm(ModelForm):
     class Meta:
         model = Team
         fields = ['title']
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': Textarea()
+        }

@@ -66,6 +66,7 @@
                       <td>{{todo.expiration_date}}</td>
                       <td>
                         <a href="delete-todo/{{todo.id}}" title="Delete">🗑️</a>
+                        <a href="todo/{{todo.id}}/comments" title="Comments">🗨</a>
                         {% if todo.status == 'In progress' %}
                           <a href="change-status/{{todo.id}}/Done" title="Mark complete">✅</a>
                         {% elif todo.status == 'To do' %}
