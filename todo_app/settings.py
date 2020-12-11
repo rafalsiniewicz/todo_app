@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from cryptography.fernet import Fernet
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,6 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!y2-lwf76)1wh^#6%r1pv8^two2!it22oh#nyo)me)2ma(p&c2'
+KEY = b'SnyqLKQIqo7SMe0psv9esfoSZcng04oWTnUosx9jqgk='
+CIPHERED_TEXT = b'gAAAAABf0-TfhhtPJXegSd8CsZ1kXcxUfHmlrqHstTW9Gy52HrFDeniX19LZc4FbCUK70k7mkkEOhjdPQ_xanZpTNx33MRRzOQ=='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -119,3 +122,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'agh21air@gmail.com'
+cipher_suite = Fernet(KEY)
+password = cipher_suite.decrypt(CIPHERED_TEXT)
+EMAIL_HOST_PASSWORD = str(password.decode("utf-8"))
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
