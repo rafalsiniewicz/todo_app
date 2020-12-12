@@ -199,6 +199,14 @@ def remove_member_from_team(request, id, user_id):
         team.save()
         return redirect('/teams/team_users/' + str(id))
 
+def leave_team(request, team_id):
+    if request.user.is_authenticated:
+        team = Team.objects.get(pk=team_id)
+        user = request.user
+        team.users.remove(user)
+        team.save()
+        return redirect('/home/0')
+
 
 def add_team(request):
     if request.user.is_authenticated:

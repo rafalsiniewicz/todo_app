@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo, teams, add_team, team_users, \
-    team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment, add_message
+    team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment, add_message, leave_team
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('home/<int:team_id>', home),
+    path('leave_team/<int:team_id>', leave_team),
     path('login/', login, name='login'),
     path('signup/', signup),
     path('add-todo/<int:team_id>', add_todo),

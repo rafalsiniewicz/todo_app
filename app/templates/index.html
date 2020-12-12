@@ -20,6 +20,7 @@
               <div class="p-3"  style="text-align: center; font-size: 20px;">No teams</div>
             {% endif %}
             {% for tm in teams %}
+            <div style="display: flex; justify-content: space-between;" class="p-2">
               {% if tm.id == team_id %}
               <div>
                 <a class="nav-link" style="font-weight: bold;" href="/home/{{tm.id}}">{{tm.title}}</a>
@@ -29,6 +30,11 @@
                 <a class="nav-link" href="/home/{{tm.id}}">{{tm.title}}</a>
               </div>
               {% endif %}
+              {% if tm.owner.id != user.id %}
+                <a class="btn btn-danger" href="/leave_team/{{tm.id}}"  onclick="return confirm('Are you sure?');" title="Mark complete">Leave</a>
+              {% endif %}
+            </div>
+
             {% endfor %}
           </div>
 
