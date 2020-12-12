@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class UserInfo(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    status = models.CharField(max_length=30)
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)

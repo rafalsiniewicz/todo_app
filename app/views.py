@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as loginUser, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from app.forms import TODOForm, TeamForm, CommentForm, CustomizedUserCreationForm
-from app.models import TODO, Team, User
+from app.models import TODO, Team, User, UserInfo
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
@@ -53,6 +53,9 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 loginUser(request, user)
+                ui = UserInfo.objects.get(user=user)
+                ui.status = "AVAILABLE",
+                ui.save(),
                 return redirect('home')
         else:
             context = {
@@ -76,6 +79,10 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             if user is not None:
+                ui = UserInfo()
+                ui.user = user
+                ui.status = 'OFFLINE'
+                ui.save()
                 return redirect('login')
         else:
             return render(request, 'signup.html', context=context)
@@ -149,6 +156,10 @@ def todo_comments(request, id):
 
 
 def signout(request):
+    user = request.user
+    ui = UserInfo.objects.get(user=user)
+    ui.status = "OFFLINE",
+    ui.save(),
     logout(request)
     return redirect('login')
 

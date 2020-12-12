@@ -127,8 +127,15 @@
                   </div>
                 {% else %}
                   <div class="p-2" style="display: flex; align-items: flex-end;">
-                    <div style="padding: 5px; background-color: #0c5360; color: white; border-radius: 5px; margin-right: 12px;">
-                      {{message.author}}
+                    <div style="padding: 5px; background-color: #0c5360; color: white; border-radius: 5px; margin-right: 12px; position: relative;">
+                      <div>{{message.author}}</div>
+                      {% if message.author.userinfo.status == "('OFFLINE',)" %}
+                       <div style="width: 5px; height: 5px;  border-radius: 5px; position: absolute; top: 2px; right: 2px; background-color: red;"> </div>
+                      {% elif message.author.userinfo.status == "('AVAILABLE',)" %}
+                       <div style="width: 5px; height: 5px;  border-radius: 5px; position: absolute; top: 2px; right: 2px; background-color: greenyellow;"> </div>
+                      {% elif message.author.userinfo.status == "('BE RIGHT BACK',)" %}
+                       <div style="width: 5px; height: 5px;  border-radius: 5px; position: absolute; top: 2px; right: 2px; background-color: yellow;"> </div>
+                      {% endif %}
                     </div>
                     <div class="p-2" style="border: 1px solid #dee2e6; border-radius: 5px;">{{message.content}}</div>
                   </div>
@@ -136,7 +143,6 @@
               {% endfor %}
 
             </div>
-
             {% if team %}
               <div class="p-2" style="width: 100%; border-top: 1px solid gray;">
                 <form action="/add-message/{{team.id}}" method="POST" style="display: flex; align-items: center;">
