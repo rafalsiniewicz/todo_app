@@ -40,3 +40,4 @@ class Team(models.Model):
     users = models.ManyToManyField(User, default=None)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s_requests_created', default=[], blank=True)
     todos = models.ManyToManyField(TODO, default=None)
+    messages = models.ManyToManyField(Comment, default=None)

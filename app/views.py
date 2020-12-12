@@ -18,13 +18,16 @@ def home(request, team_id = 0):
         teams = Team.objects.filter(users=user)
         team = None
         todos = []
+        messages = []
         if team_id == 0:
             if len(teams) > 0:
                 team = teams.first()
+                messages = team.messages.all()
                 team_id = team.id
         if team_id != 0:
             try:
                 team = teams.get(id=team_id)
+                messages = team.messages.all()
             except Team.DoesNotExist:
                 team = None
         if team != None:
@@ -32,7 +35,7 @@ def home(request, team_id = 0):
         stats = {st: 0 for st in ['Done', 'In_progress', 'To_do', 'Expired']}
         for status in list(map(lambda t: t.status, todos)):
             stats[status.replace(' ', '_')] += 1
-        return render(request, 'index.html', context={'form': form, 'todos': todos, 'stats': stats, 'teams': teams, 'team': team, 'team_id': team_id})
+        return render(request, 'index.html', context={'form': form, 'todos': todos, 'stats': stats, 'teams': teams, 'team': team, 'team_id': team_id, 'messages': messages, 'user': user})
 
 
 def login(request):
@@ -110,9 +113,19 @@ def add_comment(request, id):
         comment.save()
         todo.comments.add(comment)
         todo.save()
-        print(comment.content)
         return redirect('/todo/' + str(id) + '/comments')
 
+def add_message(request, team_id):
+     if request.user.is_authenticated:
+        team = Team.objects.get(pk=team_id)
+        user = request.user
+        form = CommentForm(request.POST)
+        comment = form.save(commit=False)
+        comment.author = user
+        comment.save()
+        team.messages.add(comment)
+        team.save()
+        return redirect('/home/' + str(team_id))
 
 def delete_todo(request, id):
     TODO.objects.get(pk=id).delete()

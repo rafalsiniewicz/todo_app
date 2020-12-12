@@ -12,7 +12,7 @@
       <div class="row p-0 mt-4" >
 
         <div class="col-lg-3">
-          <div class="border mb-3" style="width: 100%;">
+          <div class="border shadow mb-3" style="width: 100%;">
             <div class="alert alert-info text-center mb-0">
               <div class="" style="font-size: 30px;">Teams</div>
             </div>
@@ -48,9 +48,6 @@
             </div>
           {% endif %}
         </div>
-
-
-        
 
         <div class="col">
           <div class="border">
@@ -107,6 +104,41 @@
 
               </table>
             </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="border shadow" style="width: 100%;">
+            <div class="alert alert-info text-center mb-0">
+              <div class="mb-2" style="font-size: 30px;">Conversation</div>
+            </div>
+            <div style="overflow: auto; height: 500px;">
+
+              {% for message in messages %}
+                {% if message.author.id == user.id %}
+                  <div class="p-2" style="display: flex; align-items: flex-end; justify-content: flex-end; margin-left: 30px;">
+                    <div class="p-2" style="border: #bee5eb black solid; border-radius: 5px; background-color: #d1ecf1;">{{message.content}}</div>
+                  </div>
+                {% else %}
+                  <div class="p-2" style="display: flex; align-items: flex-end;">
+                    <div style="padding: 5px; background-color: #0c5360; color: white; border-radius: 5px; margin-right: 12px;">
+                      {{message.author}}
+                    </div>
+                    <div class="p-2" style="border: 1px solid #dee2e6; border-radius: 5px;">{{message.content}}</div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+
+            </div>
+
+            {% if team %}
+              <div class="p-2" style="width: 100%; border-top: 1px solid gray;">
+                <form action="/add-message/{{team.id}}" method="POST" style="display: flex; align-items: center;">
+                  {% csrf_token %}
+                  <textarea class="mx-2" style="min-width: 300px;" name="content" id="id_content"></textarea>
+                  <input type="submit" value="Send" class="btn btn-info">
+                </form>
+              </div>
             {% endif %}
           </div>
         </div>
