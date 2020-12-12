@@ -11,15 +11,28 @@ from django.core.mail import send_mail
 # Create your views here.
 
 @login_required(login_url='login')
-def home(request):
+def home(request, team_id = 0):
     if request.user.is_authenticated:
         user = request.user
         form = TODOForm()
-        todos = TODO.objects.filter(user=user).order_by('-priority')
+        teams = Team.objects.filter(users=user)
+        team = None
+        todos = []
+        if team_id == 0:
+            if len(teams) > 0:
+                team = teams.first()
+                team_id = team.id
+        if team_id != 0:
+            try:
+                team = teams.get(id=team_id)
+            except Team.DoesNotExist:
+                team = None
+        if team != None:
+            todos = team.todos.order_by('-priority')
         stats = {st: 0 for st in ['Done', 'In_progress', 'To_do', 'Expired']}
         for status in list(map(lambda t: t.status, todos)):
             stats[status.replace(' ', '_')] += 1
-        return render(request, 'index.html', context={'form': form, 'todos': todos, 'stats': stats})
+        return render(request, 'index.html', context={'form': form, 'todos': todos, 'stats': stats, 'teams': teams, 'team': team, 'team_id': team_id})
 
 
 def login(request):
@@ -66,13 +79,16 @@ def signup(request):
 
 
 @login_required(login_url='login')
-def add_todo(request):
+def add_todo(request, team_id):
     if request.user.is_authenticated:
         form = TODOForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data['user']
             todo = form.save(commit=False)
             todo.save()
+            team = Team.objects.get(pk=team_id)
+            team.todos.add(todo)
+            team.save()
             user.email_user(subject='You have new task',
                             message='Hello from todo_app. You have new task assigned. This message is automated, please don\'t reply.',
                             )

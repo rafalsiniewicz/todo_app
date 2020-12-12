@@ -21,9 +21,10 @@ from app.views import home, login, signup, add_todo, signout, delete_todo, chang
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+    path('home/<int:team_id>', home),
     path('login/', login, name='login'),
     path('signup/', signup),
-    path('add-todo/', add_todo),
+    path('add-todo/<int:team_id>', add_todo),
     path('add-comment/<int:id>', add_comment),
     path('todo/<int:id>/comments', todo_comments),
     path('delete-todo/<int:id>', delete_todo),
