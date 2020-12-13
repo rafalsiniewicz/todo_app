@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as loginUser, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from app.forms import TODOForm, TeamForm, CommentForm, CustomizedUserCreationForm
-from app.models import TODO, Team, User, UserInfo
+from app.models import TODO, Team, User, UserInfo, PrivateConversation
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
@@ -134,6 +134,18 @@ def add_message(request, team_id):
         team.save()
         return redirect('/home/' + str(team_id))
 
+def add_private_message(request, user_id, second_user_id, conversation_id):
+     if request.user.is_authenticated:
+        conversation = PrivateConversation.objects.get(pk=conversation_id)
+        user = request.user
+        form = CommentForm(request.POST)
+        comment = form.save(commit=False)
+        comment.author = user
+        comment.save()
+        conversation.messages.add(comment)
+        conversation.save()
+        return redirect('/private_conversation/' + str(user_id) + '/' + str(second_user_id))
+
 def delete_todo(request, id):
     TODO.objects.get(pk=id).delete()
     return redirect('home')
@@ -178,8 +190,28 @@ def team_users(request, id):
         user = request.user
         team = Team.objects.get(pk=id)
         users = team.users.all()
-        context = {'team': team, 'users': users}
+        context = {'team': team, 'users': users, 'user': user}
         return render(request, 'team_users.html', context=context)
+
+def private_conversation(request, user_id, second_user_id):
+    if request.user.is_authenticated:
+        user = request.user
+        second_user = User.objects.get(pk=second_user_id)
+        conversations = PrivateConversation.objects.filter(users=user)
+        conversations = conversations.filter(users=second_user)
+        conversation = None
+        messages = []
+        if len(conversations) == 0:
+            conversation = PrivateConversation()
+            conversation.save()
+            conversation.users.add(user)
+            conversation.users.add(second_user)
+            conversation.save()
+        else:
+            conversation = conversations.first()
+            messages = conversation.messages.all()
+        context = {'user_id' : user_id, 'second_user_id': second_user_id, 'conversation_id': conversation.id, 'messages': messages}
+        return render(request, 'private_conversation.html', context=context)
 
 
 def team_members_add_view(request, id):

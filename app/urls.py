@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo, teams, add_team, team_users, \
-    team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment, add_message, leave_team
+    team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment, add_message, leave_team, private_conversation, add_private_message
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,11 +29,13 @@ urlpatterns = [
     path('add-comment/<int:id>', add_comment),
     path('todo/<int:id>/comments', todo_comments),
     path('add-message/<int:team_id>', add_message),
+    path('add_private_message/<int:user_id>/<int:second_user_id>/<int:conversation_id>', add_private_message),
     path('delete-todo/<int:id>', delete_todo),
     path('change-status/<int:id>/<str:status>', change_todo),
     path('logout/', signout),
     path('teams/', teams, name="teams"),
     path('add-team/', add_team),
+    path('private_conversation/<int:user_id>/<int:second_user_id>', private_conversation),
     path('teams/team_users/<int:id>', team_users),
     path('teams/team_users/<int:id>/add', team_members_add_view),
     path('teams/team_users/<int:id>/add/<int:user_id>', add_member_to_team),

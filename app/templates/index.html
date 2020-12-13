@@ -30,11 +30,13 @@
                 <a class="nav-link" href="/home/{{tm.id}}">{{tm.title}}</a>
               </div>
               {% endif %}
-              {% if tm.owner.id != user.id %}
-                <a class="btn btn-danger" href="/leave_team/{{tm.id}}"  onclick="return confirm('Are you sure?');" title="Mark complete">Leave</a>
-              {% endif %}
+              <div>
+                  <a class="btn btn-info" href="/teams/team_users/{{team.id}}" title="Members">Members</a>
+                {% if tm.owner.id != user.id %}
+                  <a class="btn btn-danger" href="/leave_team/{{tm.id}}"  onclick="return confirm('Are you sure?');" title="Leave">Leave</a>
+                {% endif %}
+              </div>
             </div>
-
             {% endfor %}
           </div>
 
