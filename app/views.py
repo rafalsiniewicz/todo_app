@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 # Create your views here.
 
 @login_required(login_url='login')
-def home(request, team_id = 0):
+def home(request, team_id=0):
     if request.user.is_authenticated:
         user = request.user
         form = TODOForm()
@@ -35,7 +35,9 @@ def home(request, team_id = 0):
         stats = {st: 0 for st in ['Done', 'In_progress', 'To_do', 'Expired']}
         for status in list(map(lambda t: t.status, todos)):
             stats[status.replace(' ', '_')] += 1
-        return render(request, 'index.html', context={'form': form, 'todos': todos, 'stats': stats, 'teams': teams, 'team': team, 'team_id': team_id, 'messages': messages, 'user': user})
+        return render(request, 'index.html',
+                      context={'form': form, 'todos': todos, 'stats': stats, 'teams': teams, 'team': team,
+                               'team_id': team_id, 'messages': messages, 'user': user})
 
 
 def login(request):
@@ -122,8 +124,9 @@ def add_comment(request, id):
         todo.save()
         return redirect('/todo/' + str(id) + '/comments')
 
+
 def add_message(request, team_id):
-     if request.user.is_authenticated:
+    if request.user.is_authenticated:
         team = Team.objects.get(pk=team_id)
         user = request.user
         form = CommentForm(request.POST)
@@ -134,8 +137,9 @@ def add_message(request, team_id):
         team.save()
         return redirect('/home/' + str(team_id))
 
+
 def add_private_message(request, user_id, second_user_id, conversation_id):
-     if request.user.is_authenticated:
+    if request.user.is_authenticated:
         conversation = PrivateConversation.objects.get(pk=conversation_id)
         user = request.user
         form = CommentForm(request.POST)
@@ -145,6 +149,7 @@ def add_private_message(request, user_id, second_user_id, conversation_id):
         conversation.messages.add(comment)
         conversation.save()
         return redirect('/private_conversation/' + str(user_id) + '/' + str(second_user_id))
+
 
 def delete_todo(request, id):
     TODO.objects.get(pk=id).delete()
@@ -193,6 +198,7 @@ def team_users(request, id):
         context = {'team': team, 'users': users, 'user': user}
         return render(request, 'team_users.html', context=context)
 
+
 def private_conversation(request, user_id, second_user_id):
     if request.user.is_authenticated:
         user = request.user
@@ -210,7 +216,8 @@ def private_conversation(request, user_id, second_user_id):
         else:
             conversation = conversations.first()
             messages = conversation.messages.all()
-        context = {'user_id' : user_id, 'second_user_id': second_user_id, 'conversation_id': conversation.id, 'messages': messages}
+        context = {'user_id': user_id, 'second_user_id': second_user_id, 'conversation_id': conversation.id,
+                   'messages': messages}
         return render(request, 'private_conversation.html', context=context)
 
 
@@ -242,6 +249,7 @@ def remove_member_from_team(request, id, user_id):
         team.save()
         return redirect('/teams/team_users/' + str(id))
 
+
 def leave_team(request, team_id):
     if request.user.is_authenticated:
         team = Team.objects.get(pk=team_id)
@@ -262,3 +270,36 @@ def add_team(request):
             todo.users.add(user)
             todo.save()
             return redirect("teams")
+
+
+def stats(request, team_id=0):
+    if request.user.is_authenticated:
+        user = request.user
+        form = TODOForm()
+        teams = Team.objects.filter(users=user)
+        team = None
+        todos = []
+        messages = []
+        if team_id == 0:
+            if len(teams) > 0:
+                team = teams.first()
+                messages = team.messages.all()
+                team_id = team.id
+        if team_id != 0:
+            try:
+                team = teams.get(id=team_id)
+                messages = team.messages.all()
+            except Team.DoesNotExist:
+                team = None
+        if team != None:
+            todos = team.todos.order_by('-priority')
+        stats = {st: 0 for st in ['Done', 'In_progress', 'To_do', 'Expired']}
+        priors = {"priority " + str(p): 0 for p in range(1, 11)}
+        for status in list(map(lambda t: t.status, todos)):
+            stats[status.replace(' ', '_')] += 1
+        for p in list(map(lambda t: t.priority, todos)):
+            priors["priority " + p] += 1
+        # print(list(priors.keys()))
+        return render(request, 'statistics.html',
+                      context={'todos': todos, 'stats': stats, 'priors': list(priors.values()),
+                               'priors_labels': list(priors.keys())})

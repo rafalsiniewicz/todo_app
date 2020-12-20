@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/">TODO app</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="/">Main page</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item active">
+                <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/signup">Sign up</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>
+
+{% endblock %}
+{% block content %}
+{% if todos|length > 0 %}
+<div class="container pt-4">
+    <div id="chartContainer" style="height: 200px; width: 100%"></div>
+    <script>
+            window.onload = function () {
+              CanvasJS.addColorSet("custom", ["#FF0000", "#008000", "#FFA500", "#ADD8E6"]);
+              var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                colorSet: "custom",
+                theme: "light2",
+                title: {
+                  text: "Tasks status statistics",
+                  "fontSize": 20
+                },
+                axisX: {
+                  interval: 1
+                },
+                axisY: {
+                  includeZero: true,
+                  interval: 1
+                },
+                data: [{
+                  type: "bar",
+                  name: "tasks",
+                  dataPoints: [
+                      {label: "Expired", y: {{stats.Expired}} },
+                      {label: "Done", y: {{stats.Done}} },
+                      {label: "In progress", y: {{stats.In_progress}} },
+                      {label: "To do", y: {{stats.To_do}} },
+                  ]
+                }]
+              });
+              chart.render();
+              var ctx = document.getElementById('pie-chart').getContext('2d');
+              window.myPie = new Chart(ctx, config);
+
+            }
+
+    </script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        </div>
+
+        <div id="container pt-4" style="width: 100%;">
+            <canvas id="pie-chart"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script>
+            var config = {
+              type: 'pie',
+              data: {
+                datasets: [{
+                  data: {{ priors|safe }},
+                  backgroundColor: [
+                    '#FF6666', '#FFB266', '#FFFF66', '#B2FF66', '#66FF66', '#66FFB2', '#66FFFF', '#66B2FF', '#6666FF', '#B266FF'
+                  ]
+                }],
+                labels: {{ priors_labels|safe }}
+              },
+
+              options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Tasks priority statistics',
+                    "fontSize": 20,
+                },
+                legend: {
+                    position: 'right'
+                }
+              }
+            };
+
+        </script>
+
+{% endif %}
+{% endblock %}

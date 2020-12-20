@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.views import home, login, signup, add_todo, signout, delete_todo, change_todo, teams, add_team, team_users, \
-    team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment, add_message, leave_team, private_conversation, add_private_message
+    team_members_add_view, add_member_to_team, remove_member_from_team, todo_comments, add_comment, add_message, \
+    leave_team, private_conversation, add_private_message, stats
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,5 +40,6 @@ urlpatterns = [
     path('teams/team_users/<int:id>', team_users),
     path('teams/team_users/<int:id>/add', team_members_add_view),
     path('teams/team_users/<int:id>/add/<int:user_id>', add_member_to_team),
-    path('teams/team_users/<int:id>/remove/<int:user_id>', remove_member_from_team)
+    path('teams/team_users/<int:id>/remove/<int:user_id>', remove_member_from_team),
+    path('statistics/', stats),
 ]
