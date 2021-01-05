@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block navbar %}
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar todo-nav navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="/">TODO app</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -34,11 +34,11 @@
 {% block content %}
 
 <div style="width: 100%; display: flex; align-items: center; flex-direction: column;">
-    <div style="font-size: 32px;">Yours Teams</div> 
+    <div style="font-size: 32px;">Your Teams</div> 
     <div style="display: flex; width: 100%;">
 
       <div class="col-lg-4 shadow p-0 m-2">
-        <div class="alert alert-info">
+        <div class="alert alert-info todo-header">
              <h2>Add new Team</h2>
         </div>
         <div class="p-4">
@@ -46,17 +46,17 @@
             {% csrf_token %}
             {{form.as_p}}
             <hr>
-            <input type="submit" value="Add" class="btn btn-info">
+            <input type="submit" value="Add" class="btn todo-button">
           </form>
         </div>
       </div>
 
       <div style="display: flex; flex-direction: column; flex: 1" class="m-2">
         {% for team in teams %}
-          <div style="width: 100%; height: 60px; background-color: #d1ecf1; border-radius: 10px; box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; display: flex; align-items: center;" class="mb-2 px-3">
-            <div style="color: #0c5360; font-size: 24px;">{{team.title}}</div>
+          <div style="width: 100%; height: 60px; background-color: #d1ecf1; border-radius: 10px; box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; display: flex; align-items: center;" class="todo-header mb-2 px-3">
+            <div style="font-size: 24px; font-weight: bold;">{{team.title}}</div>
             <div style="margin-left: auto;">
-              <a class="btn btn-info" href="team_users/{{team.id}}" title="Delete">Members</a>
+              <a class="btn todo-button" href="team_users/{{team.id}}" title="Delete">Members</a>
               <button class="btn btn-danger">Delete</button>
             </div>
           </div>

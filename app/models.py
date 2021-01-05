@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=30)
+    github = models.CharField(max_length=200, default="")
+    style = models.CharField(max_length=20, default="")
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -1,0 +1,24 @@
+.todo-nav {
+    background-color: #3D4966 !important;
+}
+.todo-header{
+    background-color: #7383AB !important;
+    color: #1F2533 !important;
+    border-color: #7383AB !important;
+}
+.todo-button{
+    background-color: #1F2533 !important;
+    border-color: #1F2533 !important;
+    color: white !important
+}
+.todo-author{
+    background-color: #1F2533 !important;
+    border-color: #1F2533 !important;
+    color: white !important
+}
+.team-text{
+    color: #1F2533 !important
+}
+.message {
+    background-color: #BFC6D9 !important;
+}

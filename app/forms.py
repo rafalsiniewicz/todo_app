@@ -1,5 +1,5 @@
 from django.forms import ModelForm, DateInput, CharField, Textarea
-from app.models import TODO, Team, Comment
+from app.models import TODO, Team, Comment, UserInfo
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -17,6 +17,11 @@ class TeamForm(ModelForm):
     class Meta:
         model = Team
         fields = ['title']
+
+class GithubForm(ModelForm):
+    class Meta:
+        model = UserInfo
+        fields = ['github']
 
 class CommentForm(ModelForm):
     class Meta:

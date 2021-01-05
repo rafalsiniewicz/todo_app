@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="mx-auto shadow p-0">
+    <div class="alert alert-info todo-header">
+        <h2>Password</h2>
+    </div>
+    <div class="p-4">
+        <form method="post" action="change-password">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn todo-button" type="submit">Change</button>
+        </form>
+    </div>
+  </div>
+
+  <div class="mx-auto shadow p-0">
+    <div class="alert alert-info todo-header">
+        <h2>Github</h2>
+    </div>
+    <div class="pl-4">
+    <a href="{{user.userinfo.github}}">{{user.userinfo.github}}</a>
+    </div>
+    <div class="p-4">
+        <form method="post" action="change-github">
+            {% csrf_token %}
+            {{ form_github.as_p }}
+            <button class="btn todo-button" type="submit">Save</button>
+        </form>
+    </div>
+  </div>
+
+  <div class="mx-auto shadow p-0">
+    <div class="alert alert-info todo-header">
+        <h2>Style</h2>
+    </div>
+    <div class="p-4 d-flex">
+        <a class="style-buton basic-color mr-2" href="change-style/basic"></a>
+        <a class="style-buton taupe-color mr-2" href="change-style/taupe"></a>
+        <a class="style-buton blue-color" href="change-style/blue"></a>
+
+    </div>
+  </div>
+
+{% endblock %}

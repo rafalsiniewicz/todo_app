@@ -26,7 +26,7 @@
                                 <button class="btn btn-danger" disabled>Remove</button>
                               {% endif %}
                               {% if usr.id != user.id %}
-                                <a class="btn btn-success" href="/private_conversation/{{user.id}}/{{usr.id}}" title="Mark complete">Message</a>
+                                <a class="btn todo-button" href="/private_conversation/{{user.id}}/{{usr.id}}" title="Mark complete">Message</a>
                               {% endif %}
                             </td>
                         {% else %}
@@ -36,7 +36,7 @@
                                 <a class="btn btn-danger" href="{{team.id}}/remove/{{usr.id}}" title="Mark complete">Remove</a>
                               {% endif %}
                               {% if usr.id != user.id %}
-                                <a class="btn btn-success" href="/private_conversation/{{user.id}}/{{usr.id}}" title="Mark complete">Message</a>
+                                <a class="btn todo-button" href="/private_conversation/{{user.id}}/{{usr.id}}" title="Mark complete">Message</a>
                               {% endif %}
                             </td>
                         {% endif %}
@@ -46,7 +46,7 @@
             </table>
           </div>
           {% if user.id == team.owner.id %}
-            <a class="btn btn-success" style="width: 300px;" href="{{team.id}}/add" title="Delete">Add Members</a>
+            <a class="btn todo-button" style="width: 300px;" href="{{team.id}}/add" title="Delete">Add Members</a>
           {% endif %}
     </div>
 </div>

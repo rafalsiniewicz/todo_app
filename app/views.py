@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as loginUser, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from app.forms import TODOForm, TeamForm, CommentForm, CustomizedUserCreationForm
+from app.forms import TODOForm, TeamForm, CommentForm, CustomizedUserCreationForm, GithubForm
 from app.models import TODO, Team, User, UserInfo, PrivateConversation
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -189,6 +192,42 @@ def teams(request):
         context = {'form': form, 'teams': teams}
         return render(request, 'teams.html', context=context)
 
+def settings(request):
+    if request.user.is_authenticated:
+        form = PasswordChangeForm(request.user, request.POST)
+        form_github = GithubForm()
+        user = request.user
+        context = {'form': form, 'form_github': form_github, 'user': user}
+        return render(request, 'settings.html', context=context)
+
+def change_github(request):
+    if request.user.is_authenticated:
+        user = request.user
+        ui = UserInfo.objects.get(user=user)
+        ui.github = request.POST["github"]
+        ui.save(),
+        return redirect('/settings')
+
+def change_style(request, style):
+    if request.user.is_authenticated:
+        user = request.user
+        ui = UserInfo.objects.get(user=user)
+        ui.style = style
+        ui.save(),
+        return redirect('/settings')
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the error below.')
+            return redirect('/settings')
+
 
 def team_users(request, id):
     if request.user.is_authenticated:
@@ -269,7 +308,7 @@ def add_team(request):
             todo.save()
             todo.users.add(user)
             todo.save()
-            return redirect("teams")
+            return redirect("/teams")
 
 
 def stats(request, team_id=0):

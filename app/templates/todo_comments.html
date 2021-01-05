@@ -6,7 +6,7 @@
     <div style="display: flex; width: 100%; flex-direction: column; align-items: center;">
         {% for comment in comments %}
             <div style="display: flex;" class="m-2">
-                <div style="padding: 10px; background-color: #0c5360; color: white; display: flex; justify-content: center; align-items: center; border-radius: 5px; margin-right: 12px;">
+                <div class="todo-author" style="padding: 10px; background-color: #0c5360; color: white; display: flex; justify-content: center; align-items: center; border-radius: 5px; margin-right: 12px;">
                     {{comment.author.username}}
                 </div>
                 <div style="padding: 10px; border: 1px black solid; border-radius: 5px; min-width: 800px;">
@@ -20,7 +20,7 @@
                 {% csrf_token %}
                 <div>New Comment: </div>
                 <textarea class="mx-2" style="min-width: 500px;" name="content" id="id_content" required value="{{ current_name }}"></textarea>
-                <input type="submit" value="Add" class="btn btn-info">
+                <input type="submit" value="Add" class="btn todo-button">
             </form>
         </div>
 

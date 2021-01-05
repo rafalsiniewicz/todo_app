@@ -13,7 +13,7 @@
 
         <div class="col-lg-3">
           <div class="border shadow mb-3" style="width: 100%;">
-            <div class="alert alert-info text-center mb-0">
+            <div class="alert alert-info todo-header  text-center mb-0">
               <div class="" style="font-size: 30px;">Teams</div>
             </div>
             {% if team == None %}
@@ -23,15 +23,15 @@
             <div style="display: flex; justify-content: space-between;" class="p-2">
               {% if tm.id == team_id %}
               <div>
-                <a class="nav-link" style="font-weight: bold;" href="/home/{{tm.id}}">{{tm.title}}</a>
+                <a class="nav-link team-text" style="font-weight: bold;" href="/home/{{tm.id}}">{{tm.title}}</a>
               </div>
               {% else %}
               <div>
-                <a class="nav-link" href="/home/{{tm.id}}">{{tm.title}}</a>
+                <a class="nav-link team-text" href="/home/{{tm.id}}">{{tm.title}}</a>
               </div>
               {% endif %}
               <div>
-                  <a class="btn btn-info" href="/teams/team_users/{{team.id}}" title="Members">Members</a>
+                  <a class="btn todo-button" href="/teams/team_users/{{team.id}}" title="Members">Members</a>
                 {% if tm.owner.id != user.id %}
                   <a class="btn btn-danger" href="/leave_team/{{tm.id}}"  onclick="return confirm('Are you sure?');" title="Leave">Leave</a>
                 {% endif %}
@@ -42,7 +42,7 @@
 
           {% if team %}
             <div class="mx-auto shadow p-0">
-              <div class="alert alert-info">
+              <div class="alert alert-info todo-header">
                   <h2>Add new task</h2>
               </div>
               <div class="p-4">
@@ -50,7 +50,7 @@
                   {% csrf_token %}
                   {{form.as_p}}
                   <hr>
-                  <input type="submit" value="Add" class="btn btn-info">
+                  <input type="submit" value="Add" class="btn todo-button">
                 </form>
               </div>
             </div>
@@ -64,7 +64,7 @@
               <div class="p-2">
                 <br>
                 <br>
-                <div class="alert alert-info text-center">
+                <div class="alert alert-info text-center todo-header">
                   <div class="" style="font-size: 30px;">No tasks</div>
                 </div>
                 <br>
@@ -99,7 +99,7 @@
                       <td>{{todo.expiration_date}}</td>
                       <td>
                         <a href="delete-todo/{{todo.id}}" title="Delete">🗑️</a>
-                        <a href="todo/{{todo.id}}/comments" title="Comments">🗨</a>
+                        <a href="/todo/{{todo.id}}/comments" title="Comments">🗨</a>
                         {% if todo.status == 'In progress' %}
                           <a href="change-status/{{todo.id}}/Done" title="Mark complete">✅</a>
                         {% elif todo.status == 'To do' %}
@@ -117,7 +117,7 @@
         </div>
         <div class="col-lg-3">
           <div class="border shadow" style="width: 100%;">
-            <div class="alert alert-info text-center mb-0">
+            <div class="alert alert-info text-center todo-header mb-0">
               <div class="mb-2" style="font-size: 30px;">Conversation</div>
             </div>
             <div style="overflow: auto; height: 500px;">
@@ -125,11 +125,11 @@
               {% for message in messages %}
                 {% if message.author.id == user.id %}
                   <div class="p-2" style="display: flex; align-items: flex-end; justify-content: flex-end; margin-left: 30px;">
-                    <div class="p-2" style="border: #bee5eb black solid; border-radius: 5px; background-color: #d1ecf1;">{{message.content}}</div>
+                    <div class="p-2 message" style="border: #bee5eb black solid; border-radius: 5px; background-color: #d1ecf1;">{{message.content}}</div>
                   </div>
                 {% else %}
                   <div class="p-2" style="display: flex; align-items: flex-end;">
-                    <div style="padding: 5px; background-color: #0c5360; color: white; border-radius: 5px; margin-right: 12px; position: relative;">
+                    <div class="todo-author" style="padding: 5px; background-color: #0c5360; color: white; border-radius: 5px; margin-right: 12px; position: relative;">
                       <div>{{message.author}}</div>
                       {% if message.author.userinfo.status == "('OFFLINE',)" %}
                        <div style="width: 5px; height: 5px;  border-radius: 5px; position: absolute; top: 2px; right: 2px; background-color: red;"> </div>
@@ -150,7 +150,7 @@
                 <form action="/add-message/{{team.id}}" method="POST" style="display: flex; align-items: center;">
                   {% csrf_token %}
                   <textarea class="mx-2" style="min-width: 300px;" name="content" id="id_content"></textarea>
-                  <input type="submit" value="Send" class="btn btn-info">
+                  <input type="submit" value="Send" class="btn todo-button">
                 </form>
               </div>
             {% endif %}
